@@ -5,7 +5,7 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import { Link } from "react-router-dom";
-const drawerWidth = 240;
+const drawerWidth = 150;
 function Menu() {
   return (
     <Box sx={{ width: drawerWidth, display: "flex" }}>
@@ -18,8 +18,8 @@ function Menu() {
             boxSizing: "border-box",
           },
         }}
-        variant='permanent'
-        anchor='left'
+        variant="permanent"
+        anchor="left"
       >
         <Divider />
         <List>
