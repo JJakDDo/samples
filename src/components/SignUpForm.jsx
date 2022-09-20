@@ -6,7 +6,7 @@ function SignUpForm({ setShowEmailVerify, setEmail, setPw }) {
   const emailInput = useRef(null);
   const pwInput = useRef(null);
   const handleSignUp = async () => {
-    await axios.post("//211.110.209.62/api/get_code", {
+    await axios.post("http://211.110.209.62/api/get_code", {
       email: emailInput.current.value,
     });
     setShowEmailVerify(true);

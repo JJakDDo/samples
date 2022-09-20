@@ -36,18 +36,10 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
     if (checkAllCodeFilled()) {
       const code = codeRefs.current.map((code) => code.value).join("");
       setLoading(true);
-      const data = await axios.post(
-        "http://211.110.209.62/api/verify_code",
-        {
-          email,
-          code,
-        },
-        {
-          headers: {
-            withCredentials: true,
-          },
-        }
-      );
+      const data = await axios.post("http://211.110.209.62/api/verify_code", {
+        email,
+        code,
+      });
 
       if (data.data.code === 0) {
         console.log(data);
@@ -58,11 +50,6 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
             name: email,
             password: pw,
             verified_token,
-          },
-          {
-            headers: {
-              withCredentials: true,
-            },
           }
         );
         if (registerData.data.code === 0) {

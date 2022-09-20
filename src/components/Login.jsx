@@ -9,29 +9,26 @@ import {
   Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useStore } from "../store/store";
 
 function Login({ setLoggedIn }) {
   const emailRef = useRef(null);
   const pwRef = useRef(null);
+  const setJwt = useStore((state) => state.setJwt);
 
   const handleLogin = async () => {
     const email = emailRef.current.value;
     const password = pwRef.current.value;
 
-    const data = await axios.post(
-      "http://211.110.209.62/api/login",
-      {
-        email,
-        password,
-      },
-      {
-        headers: {
-          withCredentials: true,
-        },
-      }
-    );
+    const data = await axios.post("http://211.110.209.62/api/login", {
+      email,
+      password,
+    });
 
     if (data.data.code === 0) {
+      const { access_token, token_type } = data.data.data;
+
+      setJwt(access_token, token_type);
       setLoggedIn(true);
     }
   };
