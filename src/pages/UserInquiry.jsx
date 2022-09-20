@@ -6,6 +6,8 @@ import Inquiry from "../components/Inquiry";
 function UserInquiry() {
   const [loggedIn, setLoggedIn] = useState(false);
 
+  console.log(loggedIn);
+
   if (loggedIn) {
     return <Inquiry />;
   }

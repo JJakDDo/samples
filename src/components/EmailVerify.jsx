@@ -36,7 +36,7 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
     if (checkAllCodeFilled()) {
       const code = codeRefs.current.map((code) => code.value).join("");
       setLoading(true);
-      const data = await axios.post("http://211.110.209.62/api/verify_code", {
+      const data = await axios.post("https://tessverso.io/api/verify_code", {
         email,
         code,
       });
@@ -45,7 +45,7 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
         console.log(data);
         const { verified_token } = data.data.data;
         const registerData = await axios.post(
-          "http://211.110.209.62/api/register",
+          "https://tessverso.io/api/register",
           {
             name: email,
             password: pw,
@@ -71,7 +71,7 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
   }
 
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth='xs'>
       <Box
         sx={{
           marginTop: 8,
@@ -87,7 +87,7 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
           autoHideDuration={1000}
           onClose={() => setOpen(false)}
         >
-          <Alert severity="error" sx={{ width: "100%" }}>
+          <Alert severity='error' sx={{ width: "100%" }}>
             This is an error alert — check it out!
           </Alert>
         </Snackbar>
@@ -99,10 +99,10 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <EmailIcon />
         </Avatar>
-        <Typography component="h1" variant="h5" sx={{ marginBottom: 1 }}>
+        <Typography component='h1' variant='h5' sx={{ marginBottom: 1 }}>
           Verify Your Email
         </Typography>
-        <Typography component="p" variant="body1" sx={{ textAlign: "center" }}>
+        <Typography component='p' variant='body1' sx={{ textAlign: "center" }}>
           We’ve sent an email to with a link to verify your email. You may click
           the button in the email or enter the verification code below.
         </Typography>
@@ -163,9 +163,9 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
             </Box>
           )}
           <Button
-            type="submit"
+            type='submit'
             fullWidth
-            variant="contained"
+            variant='contained'
             sx={{ mt: 3, mb: 2 }}
           >
             이메일 재전송

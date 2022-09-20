@@ -1,10 +1,14 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useStore } from "../store/store";
 import axios from "axios";
+import { EDITOR_JS_TOOLS } from "../constants/tools";
+import { createReactEditorJS } from "react-editor-js";
 
 import {
   Typography,
   Grid,
+  Card,
+  Paper,
   Divider,
   List,
   ListItem,
@@ -21,22 +25,36 @@ import {
 function CreateInquiry({ setShowCreateInquiry }) {
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [editorData, setEditorData] = useState("");
+  const [contents, setContents] = useState("");
   const titleRef = useRef(null);
   const contentsRef = useRef(null);
   const jwt = useStore((state) => state.jwt);
   const setJwt = useStore((state) => state.setJwt);
+  const editorCore = useRef(null);
+
+  const ReactEditorJS = createReactEditorJS();
+
+  const handleInitailze = useCallback((instance) => {
+    editorCore.current = instance;
+  }, []);
+
+  const saveContents = useCallback(async () => {
+    const savedData = await editorCore.current.save();
+    return savedData;
+  }, []);
 
   const handleChange = (e) => {
     setSelectedCategory(e.target.value);
   };
 
   const handleOnSubmitInquiry = async () => {
-    console.log(jwt);
+    const savedContents = await saveContents();
     const data = await axios.post(
-      "http://211.110.209.62/api/inquiry/create",
+      "https://tessverso.io/api/inquiry/create",
       {
         title: titleRef.current.value,
-        contents: contentsRef.current.value,
+        contents: JSON.stringify(savedContents),
         inquiry_category_id: selectedCategory,
         areas_of_receipt: "",
         inquiry_status_id: 1,
@@ -50,7 +68,7 @@ function CreateInquiry({ setShowCreateInquiry }) {
 
     if (data.data.code === 2) {
       const data = await axios.post(
-        "http://211.110.209.62/api/refresh",
+        "https://tessverso.io/api/refresh",
         {},
         {
           headers: {
@@ -67,9 +85,7 @@ function CreateInquiry({ setShowCreateInquiry }) {
   };
 
   const getAllCategory = async () => {
-    const data = await axios.get(
-      "http://211.110.209.62/api/inquiry/categories"
-    );
+    const data = await axios.get("https://tessverso.io/api/inquiry/categories");
     if (data.data.code === 0) {
       setCategory(data.data.data);
     }
@@ -99,8 +115,8 @@ function CreateInquiry({ setShowCreateInquiry }) {
           }}
         >
           <Typography
-            component="p"
-            variant="body1"
+            component='p'
+            variant='body1'
             sx={{ textAlign: "center" }}
           >
             상담분류
@@ -108,12 +124,12 @@ function CreateInquiry({ setShowCreateInquiry }) {
         </Grid>
         <Grid item xs={10}>
           <FormControl sx={{ width: "50%" }}>
-            <InputLabel id="select-label">선택하세요.</InputLabel>
+            <InputLabel id='select-label'>선택하세요.</InputLabel>
             <Select
-              labelId="select-label"
-              id="select"
+              labelId='select-label'
+              id='select'
               value={selectedCategory}
-              label="선택하세요."
+              label='선택하세요.'
               onChange={handleChange}
             >
               {category.map((item, index) => {
@@ -135,12 +151,12 @@ function CreateInquiry({ setShowCreateInquiry }) {
             alignItems: "center",
           }}
         >
-          <Typography component="p" variant="body1">
+          <Typography component='p' variant='body1'>
             제목
           </Typography>
         </Grid>
         <Grid item xs={10}>
-          <TextField margin="normal" fullWidth inputRef={titleRef} />
+          <TextField margin='normal' fullWidth inputRef={titleRef} />
         </Grid>
         <Grid
           item
@@ -148,35 +164,51 @@ function CreateInquiry({ setShowCreateInquiry }) {
           sx={{
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "top",
           }}
         >
-          <Typography component="p" variant="body1">
+          <Typography component='p' variant='body1'>
             내용
           </Typography>
         </Grid>
         <Grid item xs={10}>
-          <TextField
-            margin="normal"
+          {/* <TextField
+            margin='normal'
             multiline
             minRows={8}
             fullWidth
             inputRef={contentsRef}
-          />
+          /> */}
+          <Box
+            sx={{
+              border: 1,
+              borderColor: "grey.400",
+              borderRadius: 1,
+              padding: 1,
+              minHeight: "300px",
+            }}
+          >
+            <ReactEditorJS
+              onInitialize={handleInitailze}
+              defaultValue={editorData}
+              tools={EDITOR_JS_TOOLS}
+              minHeight={0}
+            />
+          </Box>
         </Grid>
       </Grid>
 
       <Box sx={{ mt: 3 }}>
         <Button
-          variant="contained"
+          variant='contained'
           sx={{ ml: 1, mr: 1 }}
           onClick={handleOnSubmitInquiry}
         >
           문의하기
         </Button>
         <Button
-          type="submit"
-          variant="contained"
+          type='submit'
+          variant='contained'
           sx={{ ml: 1, mr: 1 }}
           onClick={() => setShowCreateInquiry(false)}
         >

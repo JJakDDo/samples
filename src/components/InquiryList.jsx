@@ -1,5 +1,8 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useStore } from "../store/store";
 
+import axios from "axios";
 import {
   Typography,
   Grid,
@@ -54,14 +57,39 @@ const inquiries = [
 
 function InquiryList() {
   const jwt = useStore((state) => state.jwt);
+  const [inquiries, setInquiries] = useState([]);
+
+  useEffect(() => {
+    const getInquiries = async () => {
+      const data = await axios.post(
+        "https://tessverso.io/api/inquiry/all",
+        {
+          offset: 0,
+          limit: 10,
+        },
+        {
+          headers: {
+            Authorization: `${jwt.token_type} ${jwt.access_token}`,
+          },
+        }
+      );
+      console.log(data.data);
+      if (data.data.code === 0) {
+        setInquiries(data.data.data.inquiries);
+      }
+    };
+
+    getInquiries();
+  }, []);
+
   return (
     <List sx={{ width: "100%" }}>
       <ListItem disablePadding>
         <Grid container>
           <Grid item xs={1}>
             <Typography
-              component="p"
-              variant="body1"
+              component='p'
+              variant='body1'
               sx={{ textAlign: "center" }}
             >
               No.
@@ -69,8 +97,8 @@ function InquiryList() {
           </Grid>
           <Grid item xs={7}>
             <Typography
-              component="p"
-              variant="body1"
+              component='p'
+              variant='body1'
               sx={{ textAlign: "center" }}
             >
               제목
@@ -78,8 +106,8 @@ function InquiryList() {
           </Grid>
           <Grid item xs={2}>
             <Typography
-              component="p"
-              variant="body1"
+              component='p'
+              variant='body1'
               sx={{ textAlign: "center" }}
             >
               작성일
@@ -87,8 +115,8 @@ function InquiryList() {
           </Grid>
           <Grid item xs={2}>
             <Typography
-              component="p"
-              variant="body1"
+              component='p'
+              variant='body1'
               sx={{ textAlign: "center" }}
             >
               답변여부
@@ -103,28 +131,32 @@ function InquiryList() {
           let date = new Date(created_at);
           date = date.toISOString().substring(0, 10);
           return (
-            <>
-              <ListItem disablePadding sx={{ mt: 1 }} key={index}>
-                <ListItemButton disableGutters>
+            <React.Fragment key={index}>
+              <ListItem disablePadding sx={{ mt: 1 }}>
+                <ListItemButton
+                  component={Link}
+                  to={`/userinquiry/${id}`}
+                  disableGutters
+                >
                   <Grid container>
                     <Grid item xs={1}>
                       <Typography
-                        component="p"
-                        variant="body1"
+                        component='p'
+                        variant='body1'
                         sx={{ textAlign: "center" }}
                       >
                         {id}
                       </Typography>
                     </Grid>
                     <Grid item xs={7}>
-                      <Typography component="p" variant="body1">
+                      <Typography component='p' variant='body1'>
                         {title}
                       </Typography>
                     </Grid>
                     <Grid item xs={2}>
                       <Typography
-                        component="p"
-                        variant="body1"
+                        component='p'
+                        variant='body1'
                         sx={{ textAlign: "center" }}
                       >
                         {date}
@@ -132,8 +164,8 @@ function InquiryList() {
                     </Grid>
                     <Grid item xs={2}>
                       <Typography
-                        component="p"
-                        variant="body1"
+                        component='p'
+                        variant='body1'
                         sx={{ textAlign: "center" }}
                       >
                         {inquiry_status.name}
@@ -143,7 +175,7 @@ function InquiryList() {
                 </ListItemButton>
               </ListItem>
               <Divider sx={{ mt: 1, width: "100%" }} />
-            </>
+            </React.Fragment>
           );
         })
       ) : (
@@ -152,7 +184,7 @@ function InquiryList() {
             disablePadding
             sx={{ mt: 2, display: "flex", justifyContent: "center" }}
           >
-            <Typography component="p" variant="body1">
+            <Typography component='p' variant='body1'>
               1:1 상담내역이 없습니다.
             </Typography>
           </ListItem>
