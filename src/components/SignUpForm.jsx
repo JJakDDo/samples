@@ -6,9 +6,17 @@ function SignUpForm({ setShowEmailVerify, setEmail, setPw }) {
   const emailInput = useRef(null);
   const pwInput = useRef(null);
   const handleSignUp = async () => {
-    await axios.post("http://211.110.209.62/api/get_code", {
-      email: emailInput.current.value,
-    });
+    await axios.post(
+      "http://211.110.209.62/api/get_code",
+      {
+        email: emailInput.current.value,
+      },
+      {
+        headers: {
+          withCredentials: true,
+        },
+      }
+    );
     setShowEmailVerify(true);
     setEmail(emailInput.current.value);
     setPw(pwInput.current.value);

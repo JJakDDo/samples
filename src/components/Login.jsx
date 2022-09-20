@@ -18,10 +18,18 @@ function Login({ setLoggedIn }) {
     const email = emailRef.current.value;
     const password = pwRef.current.value;
 
-    const data = await axios.post("http://211.110.209.62/api/login", {
-      email,
-      password,
-    });
+    const data = await axios.post(
+      "http://211.110.209.62/api/login",
+      {
+        email,
+        password,
+      },
+      {
+        headers: {
+          withCredentials: true,
+        },
+      }
+    );
 
     if (data.data.code === 0) {
       setLoggedIn(true);
