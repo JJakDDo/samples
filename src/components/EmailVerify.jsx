@@ -42,13 +42,19 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
       });
 
       if (data.data.code === 0) {
-        const { verified_token } = data.data;
-        await axios.post("http://211.110.209.62/api/register", {
-          name: email,
-          password: pw,
-          verified_token,
-        });
-        setShowSuccess(true);
+        console.log(data);
+        const { verified_token } = data.data.data;
+        const registerData = await axios.post(
+          "http://211.110.209.62/api/register",
+          {
+            name: email,
+            password: pw,
+            verified_token,
+          }
+        );
+        if (registerData.data.code === 0) {
+          setShowSuccess(true);
+        }
       } else if (data.data.code === 4) {
         setOpen(true);
       }
