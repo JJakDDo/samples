@@ -23,13 +23,15 @@ function Menu() {
       >
         <Divider />
         <List>
-          {["Home", "Editor", "Otp"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <Link to={`/${index > 0 ? text.toLowerCase() : ""}`}>
-                <h1>{text}</h1>
-              </Link>
-            </ListItem>
-          ))}
+          {["Home", "Editor", "Otp", "UserInquiry", "AdminInquiry"].map(
+            (text, index) => (
+              <ListItem key={text} disablePadding>
+                <Link to={`/${index > 0 ? text.toLowerCase() : ""}`}>
+                  <h1>{text}</h1>
+                </Link>
+              </ListItem>
+            )
+          )}
         </List>
       </Drawer>
     </Box>
