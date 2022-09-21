@@ -168,7 +168,7 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            이메일 재전송
+            Resend Email
           </Button>
         </Box>
       </Box>

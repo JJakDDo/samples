@@ -46,10 +46,10 @@ function Otp() {
       <Box sx={{ mt: 10 }}>
         <TextField label="email" variant="standard" inputRef={emailRef} />
         <Button variant="contained" onClick={handleSignUp}>
-          가입
+          Sign Up
         </Button>
         <Button variant="contained" onClick={handleLogin}>
-          로그인
+          Login
         </Button>
       </Box>
     );

@@ -13,6 +13,7 @@ import {
 import Parser from "html-react-parser";
 
 function RenderBlocks({ blocks }) {
+  if (blocks === undefined) return null;
   if (!Object.keys(blocks).length) return null;
 
   return blocks?.map((block, index) => {

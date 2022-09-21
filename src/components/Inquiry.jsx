@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import InquiryList from "./InquiryList";
 import CreateInquiry from "./CreateInquiry";
+import Modals from "./Modals";
 
 function Inquiry({ admin }) {
   const [showCreateInquiry, setShowCreateInquiry] = useState(false);
@@ -21,6 +22,8 @@ function Inquiry({ admin }) {
   const setAdminLoggedIn = useStore((state) => state.setAdminLoggedIn);
   const [page, setPage] = useState(1);
   const [totalInquiries, setTotalInquiries] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState("");
 
   const handleLogout = async () => {
     const url = admin
@@ -41,6 +44,11 @@ function Inquiry({ admin }) {
 
   return (
     <Container maxWidth="lg">
+      <Modals
+        showModal={showModal}
+        setShowModal={setShowModal}
+        modalType={modalType}
+      />
       <Box
         sx={{
           marginTop: 8,
@@ -51,10 +59,38 @@ function Inquiry({ admin }) {
         }}
       >
         <Grid container spacing={1}>
-          <Grid item xs={9}>
+          <Grid item xs={7}>
             <Typography component="h1" variant="h5" sx={{ marginBottom: 1 }}>
-              1:1 문의
+              1:1 Inquiry
             </Typography>
+          </Grid>
+          <Grid item xs>
+            {!showCreateInquiry && admin && (
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => {
+                  setShowModal(true);
+                  setModalType("category");
+                }}
+              >
+                Category
+              </Button>
+            )}
+          </Grid>
+          <Grid item xs>
+            {!showCreateInquiry && admin && (
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => {
+                  setShowModal(true);
+                  setModalType("status");
+                }}
+              >
+                Status
+              </Button>
+            )}
           </Grid>
           <Grid item xs>
             {!showCreateInquiry && !admin && (
@@ -63,14 +99,14 @@ function Inquiry({ admin }) {
                 variant="contained"
                 onClick={() => setShowCreateInquiry(true)}
               >
-                문의하기
+                Inquiry
               </Button>
             )}
           </Grid>
           <Grid item xs>
             {!showCreateInquiry && (
               <Button fullWidth variant="contained" onClick={handleLogout}>
-                로그아웃
+                Logout
               </Button>
             )}
           </Grid>

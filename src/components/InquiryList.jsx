@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useStore } from "../store/store";
 
@@ -63,7 +63,7 @@ function InquiryList({ admin, setTotalInquiries, offset }) {
               variant="body1"
               sx={{ textAlign: "center" }}
             >
-              제목
+              Title
             </Typography>
           </Grid>
           <Grid item xs={2}>
@@ -72,7 +72,7 @@ function InquiryList({ admin, setTotalInquiries, offset }) {
               variant="body1"
               sx={{ textAlign: "center" }}
             >
-              작성일
+              Created At
             </Typography>
           </Grid>
           <Grid item xs={2}>
@@ -81,7 +81,7 @@ function InquiryList({ admin, setTotalInquiries, offset }) {
               variant="body1"
               sx={{ textAlign: "center" }}
             >
-              답변여부
+              Status
             </Typography>
           </Grid>
         </Grid>
@@ -147,7 +147,7 @@ function InquiryList({ admin, setTotalInquiries, offset }) {
             sx={{ mt: 2, display: "flex", justifyContent: "center" }}
           >
             <Typography component="p" variant="body1">
-              1:1 상담내역이 없습니다.
+              No Inquiries...
             </Typography>
           </ListItem>
           <Divider sx={{ mt: 2, width: "100%" }} />

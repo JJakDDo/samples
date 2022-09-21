@@ -31,7 +31,7 @@ function SignUpSuccess() {
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
         >
-          로그인 하러가기
+          Login
         </Button>
       </Box>
     </Container>

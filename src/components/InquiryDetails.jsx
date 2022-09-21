@@ -94,7 +94,7 @@ function InquiryDetails({ admin }) {
         <Grid container>
           <Grid item xs={11}>
             <Typography component="h1" variant="h5" sx={{ marginBottom: 1 }}>
-              1:1 문의
+              1:1 Inquiry
             </Typography>
           </Grid>
         </Grid>
@@ -120,7 +120,7 @@ function InquiryDetails({ admin }) {
             }}
           >
             <Typography component="p" variant="h6" sx={{ textAlign: "left" }}>
-              상담분류
+              Category
             </Typography>
           </Grid>
           <Divider sx={{ mb: 2, width: "100%" }} />
@@ -144,7 +144,7 @@ function InquiryDetails({ admin }) {
             }}
           >
             <Typography component="p" variant="h6">
-              제목
+              Title
             </Typography>
           </Grid>
           <Divider sx={{ mb: 2, width: "100%" }} />
@@ -168,7 +168,7 @@ function InquiryDetails({ admin }) {
             }}
           >
             <Typography component="p" variant="h6">
-              내용
+              Contents
             </Typography>
           </Grid>
           <Divider sx={{ mb: 2, width: "100%" }} />
@@ -192,7 +192,7 @@ function InquiryDetails({ admin }) {
             variant="contained"
             sx={{ ml: 1, mr: 1 }}
           >
-            목록보기
+            Back to List
           </Button>
         </Box>
         <Grid container>
@@ -206,7 +206,7 @@ function InquiryDetails({ admin }) {
             }}
           >
             <Typography component="p" variant="h6" sx={{ textAlign: "left" }}>
-              댓글 {comments.length}
+              Comments {comments.length}
             </Typography>
           </Grid>
           <Divider sx={{ mb: 2, width: "100%" }} />
@@ -226,13 +226,13 @@ function InquiryDetails({ admin }) {
                 variant="h6"
                 sx={{ textAlign: "center" }}
               >
-                댓글이 없습니다.
+                No Comments...
               </Typography>
             )}
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="댓글을 입력하세요..."
+              label="Please type the comments..."
               margin="normal"
               multiline
               minRows={2}
@@ -243,7 +243,7 @@ function InquiryDetails({ admin }) {
           <Grid item xs={11}></Grid>
           <Grid item xs={1} sx={{ mb: 2 }}>
             <Button variant="contained" fullWidth onClick={handleOnSubmitReply}>
-              등록
+              Reply
             </Button>
           </Grid>
         </Grid>

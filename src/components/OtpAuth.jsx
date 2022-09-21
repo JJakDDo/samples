@@ -25,15 +25,14 @@ function OtpAuth({ qrcodeUrl, email }) {
       <Typography variant="h3">Google OTP 인증</Typography>
       <img src={qrcodeUrl} alt="qrcode"></img>
       <Typography variant="body1">
-        처음이시면 Google Authenticator 모바일 앱에서 위 QRCode를 스캔해서
-        등록하세요
+        Please scan QRCode from Google Authenticator mobile app
       </Typography>
 
       <TextField label="코드" variant="standard" inputRef={codeRef} />
       <Button variant="contained" onClick={handleVerify}>
-        인증
+        Verify
       </Button>
-      <Typography variant="body1">6자리 코드를 입력하세요</Typography>
+      <Typography variant="body1">Please enter 6 digit codes</Typography>
     </div>
   );
 }

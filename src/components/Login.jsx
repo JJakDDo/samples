@@ -7,7 +7,6 @@ import {
   TextField,
   Grid,
   Button,
-  FormControl,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useStore } from "../store/store";
@@ -55,7 +54,7 @@ function Login({ setLoggedIn, admin }) {
         }}
       >
         <Typography component="h1" variant="h5">
-          로그인
+          Login
         </Typography>
         <Box sx={{ mt: 1 }}>
           <form>

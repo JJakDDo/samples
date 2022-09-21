@@ -7,12 +7,6 @@ import { createReactEditorJS } from "react-editor-js";
 import {
   Typography,
   Grid,
-  Card,
-  Paper,
-  Divider,
-  List,
-  ListItem,
-  ListItemButton,
   Select,
   MenuItem,
   InputLabel,
@@ -25,12 +19,8 @@ import {
 function CreateInquiry({ setShowCreateInquiry }) {
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [editorData, setEditorData] = useState("");
-  const [contents, setContents] = useState("");
   const titleRef = useRef(null);
-  const contentsRef = useRef(null);
   const jwt = useStore((state) => state.jwt);
-  const setJwt = useStore((state) => state.setJwt);
   const editorCore = useRef(null);
 
   const ReactEditorJS = createReactEditorJS();
@@ -101,7 +91,7 @@ function CreateInquiry({ setShowCreateInquiry }) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        width: "100%",
+        width: "80%",
       }}
     >
       <Grid container>
@@ -115,21 +105,21 @@ function CreateInquiry({ setShowCreateInquiry }) {
           }}
         >
           <Typography
-            component='p'
-            variant='body1'
+            component="p"
+            variant="body1"
             sx={{ textAlign: "center" }}
           >
-            상담분류
+            Category
           </Typography>
         </Grid>
         <Grid item xs={10}>
           <FormControl sx={{ width: "50%" }}>
-            <InputLabel id='select-label'>선택하세요.</InputLabel>
+            <InputLabel id="select-label">Select One.</InputLabel>
             <Select
-              labelId='select-label'
-              id='select'
+              labelId="select-label"
+              id="select"
               value={selectedCategory}
-              label='선택하세요.'
+              label="Select One."
               onChange={handleChange}
             >
               {category.map((item, index) => {
@@ -151,12 +141,12 @@ function CreateInquiry({ setShowCreateInquiry }) {
             alignItems: "center",
           }}
         >
-          <Typography component='p' variant='body1'>
-            제목
+          <Typography component="p" variant="body1">
+            Title
           </Typography>
         </Grid>
         <Grid item xs={10}>
-          <TextField margin='normal' fullWidth inputRef={titleRef} />
+          <TextField margin="normal" fullWidth inputRef={titleRef} />
         </Grid>
         <Grid
           item
@@ -167,8 +157,8 @@ function CreateInquiry({ setShowCreateInquiry }) {
             alignItems: "top",
           }}
         >
-          <Typography component='p' variant='body1'>
-            내용
+          <Typography component="p" variant="body1">
+            Contents
           </Typography>
         </Grid>
         <Grid item xs={10}>
@@ -190,7 +180,6 @@ function CreateInquiry({ setShowCreateInquiry }) {
           >
             <ReactEditorJS
               onInitialize={handleInitailze}
-              defaultValue={editorData}
               tools={EDITOR_JS_TOOLS}
               minHeight={0}
             />
@@ -200,19 +189,19 @@ function CreateInquiry({ setShowCreateInquiry }) {
 
       <Box sx={{ mt: 3 }}>
         <Button
-          variant='contained'
+          variant="contained"
           sx={{ ml: 1, mr: 1 }}
           onClick={handleOnSubmitInquiry}
         >
-          문의하기
+          Send
         </Button>
         <Button
-          type='submit'
-          variant='contained'
+          type="submit"
+          variant="contained"
           sx={{ ml: 1, mr: 1 }}
           onClick={() => setShowCreateInquiry(false)}
         >
-          목록보기
+          Back to List
         </Button>
       </Box>
     </Box>
