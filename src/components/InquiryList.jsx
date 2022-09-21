@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useStore } from "../store/store";
 
@@ -12,7 +12,7 @@ import {
   ListItemButton,
 } from "@mui/material";
 
-function InquiryList({ admin }) {
+function InquiryList({ admin, setTotalInquiries, offset }) {
   const jwt = useStore((state) => state.jwt);
   const inquiries = useStore((state) => state.inquiries);
   const setInquiries = useStore((state) => state.setInquiries);
@@ -25,7 +25,7 @@ function InquiryList({ admin }) {
       const data = await axios.post(
         url,
         {
-          offset: 0,
+          offset,
           limit: 10,
         },
         {
@@ -34,13 +34,15 @@ function InquiryList({ admin }) {
           },
         }
       );
+      console.log(data.data);
       if (data.data.code === 0) {
+        setTotalInquiries(data.data.data.total_count);
         setInquiries(data.data.data.inquiries);
       }
     };
 
     getInquiries();
-  }, []);
+  }, [offset]);
 
   return (
     <List sx={{ width: "100%" }}>

@@ -8,6 +8,7 @@ import {
   Button,
   Grid,
   Divider,
+  Pagination,
 } from "@mui/material";
 import InquiryList from "./InquiryList";
 import CreateInquiry from "./CreateInquiry";
@@ -18,6 +19,8 @@ function Inquiry({ admin }) {
   const setJwt = useStore((state) => state.setJwt);
   const setLoggedIn = useStore((state) => state.setLoggedIn);
   const setAdminLoggedIn = useStore((state) => state.setAdminLoggedIn);
+  const [page, setPage] = useState(1);
+  const [totalInquiries, setTotalInquiries] = useState(0);
 
   const handleLogout = async () => {
     const url = admin
@@ -74,7 +77,19 @@ function Inquiry({ admin }) {
         </Grid>
         <Divider sx={{ mt: 2, mb: 8, width: "100%" }} />
         {!showCreateInquiry ? (
-          <InquiryList admin={admin} />
+          <>
+            <InquiryList
+              offset={10 * (page - 1)}
+              admin={admin}
+              setTotalInquiries={setTotalInquiries}
+            />
+            <Pagination
+              count={Math.ceil(totalInquiries / 10)}
+              color="primary"
+              page={page}
+              onChange={(e, value) => setPage(value)}
+            />
+          </>
         ) : (
           <CreateInquiry setShowCreateInquiry={setShowCreateInquiry} />
         )}

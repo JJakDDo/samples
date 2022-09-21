@@ -21,6 +21,7 @@ function InquiryDetails({ admin }) {
   const [comments, setComments] = useState([]);
   const { id } = useParams();
   const responseRef = useRef(null);
+  const index = inquiries.findIndex((inquiry) => inquiry.id === Number(id));
 
   const getComments = useCallback(async () => {
     const url = admin
@@ -37,7 +38,6 @@ function InquiryDetails({ admin }) {
         },
       }
     );
-    console.log(data.data);
     if (data.data.code === 0) {
       setComments(data.data.data.comments);
     }
@@ -52,8 +52,8 @@ function InquiryDetails({ admin }) {
       {
         inquiry_id: id,
         response: responseRef.current.value,
-        inquiry_category_id: inquiries[id - 1].inquiry_category.id,
-        inquiry_status_id: inquiries[id - 1].inquiry_status.id,
+        inquiry_category_id: inquiries[index].inquiry_category.id,
+        inquiry_status_id: inquiries[index].inquiry_status.id,
       },
       {
         headers: {
@@ -131,7 +131,7 @@ function InquiryDetails({ admin }) {
             sx={{ padding: 1, width: "100%", mb: 3 }}
           >
             <Typography component="p" variant="body1">
-              {inquiries[id - 1]?.inquiry_category.name}
+              {inquiries[index]?.inquiry_category.name}
             </Typography>
           </Grid>
           <Grid
@@ -155,7 +155,7 @@ function InquiryDetails({ admin }) {
             sx={{ padding: 1, width: "100%", mb: 3 }}
           >
             <Typography component="p" variant="body1">
-              {inquiries[id - 1]?.title}
+              {inquiries[index]?.title}
             </Typography>
           </Grid>
 
@@ -180,7 +180,7 @@ function InquiryDetails({ admin }) {
             sx={{ padding: 1, width: "100%", mb: 3 }}
           >
             <RenderBlocks
-              blocks={JSON.parse(inquiries[id - 1]?.contents)?.blocks}
+              blocks={JSON.parse(inquiries[index]?.contents)?.blocks}
             />
           </Grid>
         </Grid>
