@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useStore } from "../store/store";
 
 import Login from "../components/Login";
 import Inquiry from "../components/Inquiry";
 
 function UserInquiry() {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  console.log(loggedIn);
+  const loggedIn = useStore((state) => state.loggedIn);
+  const setLoggedIn = useStore((state) => state.setLoggedIn);
 
   if (loggedIn) {
     return <Inquiry />;

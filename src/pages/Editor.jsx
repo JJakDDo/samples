@@ -77,7 +77,7 @@ function Editor(props) {
   }, []);
 
   return (
-    <div>
+    <Box sx={{ mt: 10 }}>
       <Button variant="contained" onClick={() => setEditing(true)}>
         수정
       </Button>
@@ -122,7 +122,7 @@ function Editor(props) {
           />
         </Box>
       )}
-    </div>
+    </Box>
   );
 }
 

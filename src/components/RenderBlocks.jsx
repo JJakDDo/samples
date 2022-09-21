@@ -13,6 +13,9 @@ import {
 import Parser from "html-react-parser";
 
 function RenderBlocks({ blocks }) {
+  console.log(blocks);
+  if (!Object.keys(blocks).length) return null;
+
   return blocks?.map((block, index) => {
     switch (block.type) {
       case "header": {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useStore } from "../store/store";
 
@@ -12,57 +12,18 @@ import {
   ListItemButton,
 } from "@mui/material";
 
-const inquiries = [
-  {
-    id: 1,
-    user: {
-      name: "test@test.com",
-      email: "test@test.com",
-    },
-    title: "문의사항입니다.",
-    inquiry_category: {
-      id: 1,
-      name: "1번",
-    },
-    contents: "내용입니다.",
-    areas_of_reciept: "",
-    inquiry_status: {
-      id: 1,
-      name: "확인중",
-    },
-    created_at: "2022-09-10T02:00:00Z",
-    updated_at: "2022-09-10T02:00:00Z",
-  },
-  {
-    id: 2,
-    user: {
-      name: "test@test.com",
-      email: "test@test.com",
-    },
-    title: "문의11111사항입니다.",
-    inquiry_category: {
-      id: 1,
-      name: "1번",
-    },
-    contents: "내용입니다.",
-    areas_of_reciept: "",
-    inquiry_status: {
-      id: 2,
-      name: "완료",
-    },
-    created_at: "2022-09-12T02:00:00Z",
-    updated_at: "2022-09-10T02:00:00Z",
-  },
-];
-
-function InquiryList() {
+function InquiryList({ admin }) {
   const jwt = useStore((state) => state.jwt);
-  const [inquiries, setInquiries] = useState([]);
+  const inquiries = useStore((state) => state.inquiries);
+  const setInquiries = useStore((state) => state.setInquiries);
 
   useEffect(() => {
     const getInquiries = async () => {
+      const url = admin
+        ? "https://tessverso.io/api/inquiry/admin/all"
+        : "https://tessverso.io/api/inquiry/all";
       const data = await axios.post(
-        "https://tessverso.io/api/inquiry/all",
+        url,
         {
           offset: 0,
           limit: 10,
@@ -73,7 +34,6 @@ function InquiryList() {
           },
         }
       );
-      console.log(data.data);
       if (data.data.code === 0) {
         setInquiries(data.data.data.inquiries);
       }
@@ -88,8 +48,8 @@ function InquiryList() {
         <Grid container>
           <Grid item xs={1}>
             <Typography
-              component='p'
-              variant='body1'
+              component="p"
+              variant="body1"
               sx={{ textAlign: "center" }}
             >
               No.
@@ -97,8 +57,8 @@ function InquiryList() {
           </Grid>
           <Grid item xs={7}>
             <Typography
-              component='p'
-              variant='body1'
+              component="p"
+              variant="body1"
               sx={{ textAlign: "center" }}
             >
               제목
@@ -106,8 +66,8 @@ function InquiryList() {
           </Grid>
           <Grid item xs={2}>
             <Typography
-              component='p'
-              variant='body1'
+              component="p"
+              variant="body1"
               sx={{ textAlign: "center" }}
             >
               작성일
@@ -115,8 +75,8 @@ function InquiryList() {
           </Grid>
           <Grid item xs={2}>
             <Typography
-              component='p'
-              variant='body1'
+              component="p"
+              variant="body1"
               sx={{ textAlign: "center" }}
             >
               답변여부
@@ -135,28 +95,28 @@ function InquiryList() {
               <ListItem disablePadding sx={{ mt: 1 }}>
                 <ListItemButton
                   component={Link}
-                  to={`/userinquiry/${id}`}
+                  to={admin ? `/adminInquiry/${id}` : `/userInquiry/${id}`}
                   disableGutters
                 >
                   <Grid container>
                     <Grid item xs={1}>
                       <Typography
-                        component='p'
-                        variant='body1'
+                        component="p"
+                        variant="body1"
                         sx={{ textAlign: "center" }}
                       >
                         {id}
                       </Typography>
                     </Grid>
                     <Grid item xs={7}>
-                      <Typography component='p' variant='body1'>
+                      <Typography component="p" variant="body1">
                         {title}
                       </Typography>
                     </Grid>
                     <Grid item xs={2}>
                       <Typography
-                        component='p'
-                        variant='body1'
+                        component="p"
+                        variant="body1"
                         sx={{ textAlign: "center" }}
                       >
                         {date}
@@ -164,8 +124,8 @@ function InquiryList() {
                     </Grid>
                     <Grid item xs={2}>
                       <Typography
-                        component='p'
-                        variant='body1'
+                        component="p"
+                        variant="body1"
                         sx={{ textAlign: "center" }}
                       >
                         {inquiry_status.name}
@@ -184,7 +144,7 @@ function InquiryList() {
             disablePadding
             sx={{ mt: 2, display: "flex", justifyContent: "center" }}
           >
-            <Typography component='p' variant='body1'>
+            <Typography component="p" variant="body1">
               1:1 상담내역이 없습니다.
             </Typography>
           </ListItem>

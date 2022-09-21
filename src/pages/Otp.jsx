@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import OtpAuth from "../components/OtpAuth";
-import { Button, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import axios from "axios";
 
 const ENDPOINT = "https://notion-page-api.herokuapp.com/api/v1/auth";
@@ -43,7 +43,7 @@ function Otp() {
 
   if (!firstLogin) {
     return (
-      <div>
+      <Box sx={{ mt: 10 }}>
         <TextField label="email" variant="standard" inputRef={emailRef} />
         <Button variant="contained" onClick={handleSignUp}>
           가입
@@ -51,7 +51,7 @@ function Otp() {
         <Button variant="contained" onClick={handleLogin}>
           로그인
         </Button>
-      </div>
+      </Box>
     );
   } else {
     return <OtpAuth qrcodeUrl={qrcodeUrl} email={email} />;

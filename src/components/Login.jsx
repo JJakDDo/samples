@@ -7,11 +7,12 @@ import {
   TextField,
   Grid,
   Button,
+  FormControl,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useStore } from "../store/store";
 
-function Login({ setLoggedIn }) {
+function Login({ setLoggedIn, admin }) {
   const emailRef = useRef(null);
   const pwRef = useRef(null);
   const setJwt = useStore((state) => state.setJwt);
@@ -20,12 +21,22 @@ function Login({ setLoggedIn }) {
     const email = emailRef.current.value;
     const password = pwRef.current.value;
 
-    const data = await axios.post("https://tessverso.io/api/login", {
-      email,
-      password,
-    });
+    const url = admin
+      ? "https://tessverso.io/api/admin/login"
+      : "https://tessverso.io/api/login";
+    const body = admin
+      ? {
+          username: email,
+          password,
+        }
+      : {
+          email,
+          password,
+        };
+    const data = await axios.post(url, body);
 
     if (data.data.code === 0) {
+      console.log(data.data);
       const { access_token, token_type } = data.data.data;
 
       setJwt(access_token, token_type);
@@ -33,7 +44,7 @@ function Login({ setLoggedIn }) {
     }
   };
   return (
-    <Container maxWidth='xs'>
+    <Container maxWidth="xs">
       <Box
         sx={{
           marginTop: 8,
@@ -43,50 +54,55 @@ function Login({ setLoggedIn }) {
           alignItems: "center",
         }}
       >
-        <Typography component='h1' variant='h5'>
+        <Typography component="h1" variant="h5">
           로그인
         </Typography>
         <Box sx={{ mt: 1 }}>
-          <TextField
-            margin='normal'
-            required
-            fullWidth
-            id='email'
-            label='Email Address'
-            name='email'
-            autoComplete='email'
-            autoFocus
-            inputRef={emailRef}
-          />
-          <TextField
-            margin='normal'
-            required
-            fullWidth
-            name='password'
-            label='Password'
-            type='password'
-            id='password'
-            autoComplete='current-password'
-            inputRef={pwRef}
-          />
-          <Button
-            fullWidth
-            variant='contained'
-            sx={{ mt: 3, mb: 2 }}
-            onClick={handleLogin}
-          >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href='#' variant='body2'>
-                Forgot password?
-              </Link>
+          <form>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              inputRef={emailRef}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              inputRef={pwRef}
+            />
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={handleLogin}
+            >
+              Sign In
+            </Button>
+          </form>
+
+          {!admin && (
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link to="/signup">{"Don't have an account? Sign Up"}</Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link to='/signup'>{"Don't have an account? Sign Up"}</Link>
-            </Grid>
-          </Grid>
+          )}
         </Box>
       </Box>
     </Container>
