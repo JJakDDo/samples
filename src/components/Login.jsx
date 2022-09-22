@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import {
   Container,
@@ -10,36 +10,63 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useStore } from "../store/store";
+import { errorHandler } from "../utils/error";
 
 function Login({ setLoggedIn, admin }) {
   const emailRef = useRef(null);
   const pwRef = useRef(null);
   const setJwt = useStore((state) => state.setJwt);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleLogin = async () => {
     const email = emailRef.current.value;
     const password = pwRef.current.value;
+    setEmailError(false);
+    setPasswordError(false);
 
-    const url = admin
-      ? "https://tessverso.io/api/admin/login"
-      : "https://tessverso.io/api/login";
-    const body = admin
-      ? {
-          username: email,
-          password,
+    if (email === "") {
+      setEmailError(true);
+      return;
+    }
+    if (password === "") {
+      setPasswordError(true);
+      return;
+    }
+    try {
+      const url = admin
+        ? "https://tessverso.io/api/admin/login"
+        : "https://tessverso.io/api/login";
+      const body = admin
+        ? {
+            username: email,
+          }
+        : {
+            email,
+            password,
+          };
+      const data = await axios.post(url, body);
+      console.log(data);
+
+      switch (data.data.code) {
+        case 0: {
+          const { access_token, token_type } = data.data.data;
+
+          setJwt(access_token, token_type);
+          setLoggedIn(true);
+          break;
         }
-      : {
-          email,
-          password,
-        };
-    const data = await axios.post(url, body);
-
-    if (data.data.code === 0) {
-      console.log(data.data);
-      const { access_token, token_type } = data.data.data;
-
-      setJwt(access_token, token_type);
-      setLoggedIn(true);
+        case 1: {
+          setShowError(true);
+          break;
+        }
+        default: {
+          throw new Error("Something went wrong...");
+        }
+      }
+    } catch (error) {
+      errorHandler(error);
     }
   };
   return (
@@ -59,6 +86,7 @@ function Login({ setLoggedIn, admin }) {
         <Box sx={{ mt: 1 }}>
           <form>
             <TextField
+              error={emailError}
               margin="normal"
               required
               fullWidth
@@ -70,6 +98,7 @@ function Login({ setLoggedIn, admin }) {
               inputRef={emailRef}
             />
             <TextField
+              error={passwordError}
               margin="normal"
               required
               fullWidth
@@ -80,6 +109,16 @@ function Login({ setLoggedIn, admin }) {
               autoComplete="current-password"
               inputRef={pwRef}
             />
+            {showError && (
+              <Typography
+                sx={{ textAlign: "center" }}
+                color="error.main"
+                component="p"
+                variant="body2"
+              >
+                Email or password is incorrect. Please check again.
+              </Typography>
+            )}
             <Button
               fullWidth
               variant="contained"

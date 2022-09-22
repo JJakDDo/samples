@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useStore } from "../store/store";
 
 import axios from "axios";
@@ -11,33 +11,42 @@ import {
   ListItem,
   ListItemButton,
 } from "@mui/material";
+import { errorHandler } from "../utils/error";
 
 function InquiryList({ admin, setTotalInquiries, offset }) {
   const jwt = useStore((state) => state.jwt);
   const inquiries = useStore((state) => state.inquiries);
   const setInquiries = useStore((state) => state.setInquiries);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getInquiries = async () => {
-      const url = admin
-        ? "https://tessverso.io/api/inquiry/admin/all"
-        : "https://tessverso.io/api/inquiry/all";
-      const data = await axios.post(
-        url,
-        {
-          offset,
-          limit: 10,
-        },
-        {
-          headers: {
-            Authorization: `${jwt.token_type} ${jwt.access_token}`,
+      try {
+        const url = admin
+          ? "https://tessverso.io/api/inquiry/admin/all"
+          : "https://tessverso.io/api/inquiry/all";
+        const data = await axios.post(
+          url,
+          {
+            offset,
+            limit: 10,
           },
+          {
+            headers: {
+              Authorization: `${jwt.token_type} ${jwt.access_token}`,
+            },
+          }
+        );
+        if (data.data.code === 0) {
+          setTotalInquiries(data.data.data.total_count);
+          setInquiries(data.data.data.inquiries);
+        } else if (data.data.code === 2) {
+          alert("Not authorized. Please log in again", () =>
+            navigate(admin ? "/adminInquiry" : "userInquiry")
+          );
         }
-      );
-      console.log(data.data);
-      if (data.data.code === 0) {
-        setTotalInquiries(data.data.data.total_count);
-        setInquiries(data.data.data.inquiries);
+      } catch (error) {
+        errorHandler(error, "Incorrect Code");
       }
     };
 

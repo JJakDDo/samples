@@ -10,60 +10,77 @@ import {
   TextField,
 } from "@mui/material";
 import { useStore } from "../store/store";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import RenderBlocks from "../components/RenderBlocks";
 import axios from "axios";
 import Comments from "./Comments";
+import { errorHandler } from "../utils/error";
 
 function InquiryDetails({ admin }) {
   const inquiries = useStore((state) => state.inquiries);
   const jwt = useStore((state) => state.jwt);
   const [comments, setComments] = useState([]);
+  const [commentInfoString, setCommentInfoString] = useState("No Comments...");
   const { id } = useParams();
   const responseRef = useRef(null);
   const index = inquiries.findIndex((inquiry) => inquiry.id === Number(id));
+  const navigate = useNavigate();
 
   const getComments = useCallback(async () => {
-    const url = admin
-      ? "https://tessverso.io/api/inquiry/admin/details"
-      : "https://tessverso.io/api/inquiry/details";
-    const data = await axios.post(
-      url,
-      {
-        inquiry_id: id,
-      },
-      {
-        headers: {
-          Authorization: `${jwt.token_type} ${jwt.access_token}`,
+    try {
+      const url = admin
+        ? "https://tessverso.io/api/inquiry/admin/details"
+        : "https://tessverso.io/api/inquiry/details";
+      const data = await axios.post(
+        url,
+        {
+          inquiry_id: id,
         },
+        {
+          headers: {
+            Authorization: `${jwt.token_type} ${jwt.access_token}`,
+          },
+        }
+      );
+      if (data.data.code === 0) {
+        setComments(data.data.data.comments);
+      } else {
+        setCommentInfoString("Something went wrong... Please refresh the page");
       }
-    );
-    if (data.data.code === 0) {
-      setComments(data.data.data.comments);
+    } catch (error) {
+      errorHandler(error);
     }
   }, [admin, id, jwt]);
 
   const handleOnSubmitReply = async () => {
-    const url = admin
-      ? "https://tessverso.io/api/inquiry/admin/reply"
-      : "https://tessverso.io/api/inquiry/reply";
-    const data = await axios.post(
-      url,
-      {
-        inquiry_id: id,
-        response: responseRef.current.value,
-        inquiry_category_id: inquiries[index].inquiry_category.id,
-        inquiry_status_id: inquiries[index].inquiry_status.id,
-      },
-      {
-        headers: {
-          Authorization: `${jwt.token_type} ${jwt.access_token}`,
+    try {
+      const url = admin
+        ? "https://tessverso.io/api/inquiry/admin/reply"
+        : "https://tessverso.io/api/inquiry/reply";
+      const data = await axios.post(
+        url,
+        {
+          inquiry_id: id,
+          response: responseRef.current.value,
+          inquiry_category_id: inquiries[index].inquiry_category.id,
+          inquiry_status_id: inquiries[index].inquiry_status.id,
         },
+        {
+          headers: {
+            Authorization: `${jwt.token_type} ${jwt.access_token}`,
+          },
+        }
+      );
+      if (data.data.code === 0) {
+        responseRef.current.value = "";
+        getComments();
+      } else if (data.data.code === 2) {
+        alert("Not authorized. Please log in again", () =>
+          navigate(admin ? "/adminInquiry" : "userInquiry")
+        );
       }
-    );
-    if (data.data.code === 0) {
-      responseRef.current.value = "";
-      getComments();
+    } catch (error) {
+      errorHandler(error);
     }
   };
 
@@ -226,7 +243,7 @@ function InquiryDetails({ admin }) {
                 variant="h6"
                 sx={{ textAlign: "center" }}
               >
-                No Comments...
+                {commentInfoString}
               </Typography>
             )}
           </Grid>

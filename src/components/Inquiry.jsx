@@ -13,6 +13,7 @@ import {
 import InquiryList from "./InquiryList";
 import CreateInquiry from "./CreateInquiry";
 import Modals from "./Modals";
+import { errorHandler } from "../utils/error";
 
 function Inquiry({ admin }) {
   const [showCreateInquiry, setShowCreateInquiry] = useState(false);
@@ -29,16 +30,22 @@ function Inquiry({ admin }) {
     const url = admin
       ? "https://tessverso.io/api/admin/logout"
       : "https://tessverso.io/api/logout";
-    const data = await axios.get(url, {
-      headers: {
-        Authorization: `${jwt.token_type} ${jwt.access_token}`,
-      },
-    });
+    try {
+      const data = await axios.get(url, {
+        headers: {
+          Authorization: `${jwt.token_type} ${jwt.access_token}`,
+        },
+      });
 
-    if (data.data.code === 0) {
-      setLoggedIn(false);
-      setAdminLoggedIn(false);
-      setJwt("", "");
+      if (data.data.code === 0) {
+        setLoggedIn(false);
+        setAdminLoggedIn(false);
+        setJwt("", "");
+      } else if (data.data.code === 2) {
+        alert("Not authorized. Please log in again");
+      }
+    } catch (error) {
+      errorHandler(error);
     }
   };
 

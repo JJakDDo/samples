@@ -10,8 +10,14 @@ function Otp() {
   const [email, setEmail] = useState("");
   const [firstLogin, setFirstLogin] = useState(false);
   const [qrcodeUrl, setqrcodeUrl] = useState("");
+  const [error, setError] = useState(false);
 
   const handleSignUp = async () => {
+    setError(false);
+    if (emailRef.current.value === "") {
+      setError(true);
+      return;
+    }
     try {
       const data = await axios.post(`${ENDPOINT}/signup`, {
         email: emailRef.current.value,
@@ -27,6 +33,11 @@ function Otp() {
   };
 
   const handleLogin = async () => {
+    setError(false);
+    if (emailRef.current.value === "") {
+      setError(true);
+      return;
+    }
     try {
       const data = await axios.post(`${ENDPOINT}/login`, {
         email: emailRef.current.value,
@@ -44,7 +55,12 @@ function Otp() {
   if (!firstLogin) {
     return (
       <Box sx={{ mt: 10 }}>
-        <TextField label="email" variant="standard" inputRef={emailRef} />
+        <TextField
+          error={error}
+          label="email"
+          variant="standard"
+          inputRef={emailRef}
+        />
         <Button variant="contained" onClick={handleSignUp}>
           Sign Up
         </Button>

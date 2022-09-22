@@ -1,13 +1,20 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 
 import { Typography, TextField, Button } from "@mui/material";
+import { errorHandler } from "../utils/error";
 
 const ENDPOINT = "https://notion-page-api.herokuapp.com/api/v1/auth";
 
 function OtpAuth({ qrcodeUrl, email }) {
   const codeRef = useRef(null);
+  const [error, setError] = useState(false);
   const handleVerify = async () => {
+    setError(false);
+    if (codeRef.current.value === "") {
+      setError(true);
+      return;
+    }
     try {
       const data = await axios.post(`${ENDPOINT}/verify`, {
         email,
@@ -17,7 +24,8 @@ function OtpAuth({ qrcodeUrl, email }) {
         alert(data.data.msg);
       }
     } catch (error) {
-      alert(error.response.data.msg);
+      console.log(error);
+      errorHandler(error);
     }
   };
   return (
@@ -28,7 +36,12 @@ function OtpAuth({ qrcodeUrl, email }) {
         Please scan QRCode from Google Authenticator mobile app
       </Typography>
 
-      <TextField label="코드" variant="standard" inputRef={codeRef} />
+      <TextField
+        error={error}
+        label="코드"
+        variant="standard"
+        inputRef={codeRef}
+      />
       <Button variant="contained" onClick={handleVerify}>
         Verify
       </Button>

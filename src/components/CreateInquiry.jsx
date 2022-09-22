@@ -57,16 +57,15 @@ function CreateInquiry({ setShowCreateInquiry }) {
     );
 
     if (data.data.code === 2) {
-      const data = await axios.post(
-        "https://tessverso.io/api/refresh",
-        {},
-        {
-          headers: {
-            Authorization: `${jwt.token_type} ${jwt.access_token}`,
-          },
-        }
-      );
-      console.log(data);
+      // const data = await axios.post(
+      //   "https://tessverso.io/api/refresh",
+      //   {},
+      //   {
+      //     headers: {
+      //       Authorization: `${jwt.token_type} ${jwt.access_token}`,
+      //     },
+      //   }
+      // );
     }
 
     if (data.data.code === 0) {

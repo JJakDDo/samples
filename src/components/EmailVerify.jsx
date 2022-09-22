@@ -15,6 +15,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SignUpSuccess from "./SignUpSuccess";
 import CustomCodeInput from "./CustomCodeInput";
+import { errorHandler } from "../utils/error";
 
 function EmailVerify({ setShowEmailVerify, email, pw }) {
   const [loading, setLoading] = useState(false);
@@ -36,28 +37,32 @@ function EmailVerify({ setShowEmailVerify, email, pw }) {
     if (checkAllCodeFilled()) {
       const code = codeRefs.current.map((code) => code.value).join("");
       setLoading(true);
-      const data = await axios.post("https://tessverso.io/api/verify_code", {
-        email,
-        code,
-      });
+      try {
+        const data = await axios.post("https://tessverso.io/api/verify_code", {
+          email,
+          code,
+        });
 
-      if (data.data.code === 0) {
-        console.log(data);
-        const { verified_token } = data.data.data;
-        const registerData = await axios.post(
-          "https://tessverso.io/api/register",
-          {
-            name: email,
-            password: pw,
-            verified_token,
+        if (data.data.code === 0) {
+          const { verified_token } = data.data.data;
+          const registerData = await axios.post(
+            "https://tessverso.io/api/register",
+            {
+              name: email,
+              password: pw,
+              verified_token,
+            }
+          );
+          if (registerData.data.code === 0) {
+            setShowSuccess(true);
           }
-        );
-        if (registerData.data.code === 0) {
-          setShowSuccess(true);
+        } else if (data.data.code === 4) {
+          setOpen(true);
         }
-      } else if (data.data.code === 4) {
-        setOpen(true);
+      } catch (error) {
+        errorHandler(error);
       }
+
       setLoading(false);
     }
 
