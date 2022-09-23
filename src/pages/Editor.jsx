@@ -8,6 +8,7 @@ import { Box, Button, Paper } from "@mui/material";
 import axios from "axios";
 import { createReactEditorJS } from "react-editor-js";
 import { EDITOR_JS_TOOLS } from "../constants/tools";
+import useFetch from "../hooks/useFetch";
 
 const DEFAULT_INITIAL_DATA = () => {
   return {
@@ -21,7 +22,8 @@ const ENDPOINT = "https://notion-page-api.herokuapp.com/api/v1/editor";
 
 function Editor(props) {
   const ejInstance = useRef(null);
-  const [editorData, setEditorData] = useState(DEFAULT_INITIAL_DATA);
+  const [editorData, setEditorData] = useState({});
+  //console.log(editorData);
   const [editing, setEditing] = useState(false);
   const editorCore = useRef(null);
 
@@ -57,7 +59,11 @@ function Editor(props) {
   };
   const getData = async () => {
     const data = await axios.get(ENDPOINT);
-    console.log(data);
+    console.log(data.data);
+    if (!data.data.blocks) {
+      setEditorData(DEFAULT_INITIAL_DATA);
+      return;
+    }
     setEditorData(data.data);
   };
 
@@ -78,9 +84,9 @@ function Editor(props) {
 
   return (
     <Box sx={{ mt: 10 }}>
-      <Button variant="contained" onClick={() => setEditing(true)}>
+      {/* <Button variant="contained" onClick={() => setEditing(true)}>
         수정
-      </Button>
+      </Button> */}
       <Button
         variant="contained"
         onClick={async () => {
@@ -95,7 +101,7 @@ function Editor(props) {
       >
         저장
       </Button>
-      {!editing && (
+      {/*!editing && (
         <Box
           component={Paper}
           ml={2}
@@ -114,14 +120,30 @@ function Editor(props) {
           pr={4}
           sx={{ width: "700px", minHeight: "800px" }}
         >
-          {/* <div id={EDITOR_HOLDER_ID} /> */}
           <ReactEditorJS
             onInitialize={handleInitailze}
             defaultValue={editorData}
             tools={EDITOR_JS_TOOLS}
           />
         </Box>
-      )}
+      )*/}
+      <Box
+        component={Paper}
+        ml={2}
+        pl={4}
+        pr={4}
+        sx={{ width: "700px", minHeight: "800px" }}
+      >
+        {/* <div id={EDITOR_HOLDER_ID} /> */}
+        {editorData.blocks && (
+          <ReactEditorJS
+            onInitialize={handleInitailze}
+            defaultValue={editorData}
+            tools={EDITOR_JS_TOOLS}
+            onReady={() => console.log(editorData)}
+          />
+        )}
+      </Box>
     </Box>
   );
 }

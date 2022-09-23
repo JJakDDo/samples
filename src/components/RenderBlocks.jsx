@@ -15,6 +15,7 @@ import Parser from "html-react-parser";
 function RenderBlocks({ blocks }) {
   if (blocks === undefined) return null;
   if (!Object.keys(blocks).length) return null;
+  console.log(blocks);
 
   return blocks?.map((block, index) => {
     switch (block.type) {
