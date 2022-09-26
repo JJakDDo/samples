@@ -17,6 +17,9 @@ function InquiryList({ admin, setTotalInquiries, offset }) {
   const jwt = useStore((state) => state.jwt);
   const inquiries = useStore((state) => state.inquiries);
   const setInquiries = useStore((state) => state.setInquiries);
+  const setJwt = useStore((state) => state.setJwt);
+  const setLoggedIn = useStore((state) => state.setLoggedIn);
+  const setAdminLoggedIn = useStore((state) => state.setAdminLoggedIn);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,8 +44,11 @@ function InquiryList({ admin, setTotalInquiries, offset }) {
           setTotalInquiries(data.data.data.total_count);
           setInquiries(data.data.data.inquiries);
         } else if (data.data.code === 2) {
+          setLoggedIn(false);
+          setAdminLoggedIn(false);
+          setJwt("", "");
           alert("Not authorized. Please log in again", () =>
-            navigate(admin ? "/adminInquiry" : "userInquiry")
+            navigate(admin ? "/adminInquiry" : "/userInquiry")
           );
         }
       } catch (error) {
@@ -50,8 +56,10 @@ function InquiryList({ admin, setTotalInquiries, offset }) {
       }
     };
 
-    getInquiries();
-  }, [offset]);
+    if (jwt.access_token) {
+      getInquiries();
+    }
+  }, [jwt]);
 
   return (
     <List sx={{ width: "100%" }}>

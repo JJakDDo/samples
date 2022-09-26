@@ -16,6 +16,7 @@ function Login({ setLoggedIn, admin }) {
   const emailRef = useRef(null);
   const pwRef = useRef(null);
   const setJwt = useStore((state) => state.setJwt);
+  const setAdminLoggedIn = useStore((state) => state.setAdminLoggedIn);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -25,6 +26,7 @@ function Login({ setLoggedIn, admin }) {
     const password = pwRef.current.value;
     setEmailError(false);
     setPasswordError(false);
+    setAdminLoggedIn(admin);
 
     if (email === "") {
       setEmailError(true);
@@ -41,13 +43,13 @@ function Login({ setLoggedIn, admin }) {
       const body = admin
         ? {
             username: email,
+            password,
           }
         : {
             email,
             password,
           };
       const data = await axios.post(url, body);
-      console.log(data);
 
       switch (data.data.code) {
         case 0: {

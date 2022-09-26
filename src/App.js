@@ -8,6 +8,7 @@ import AdminInquiry from "./pages/AdminInquiry";
 import InquiryDetails from "./components/InquiryDetails";
 import { Route, Routes } from "react-router-dom";
 import SignUp from "./pages/SignUp";
+import GetRefreshToken from "./components/GetRefreshToken";
 
 import { Box } from "@mui/material";
 
@@ -28,6 +29,7 @@ function App() {
         />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
+      <GetRefreshToken />
     </Box>
   );
 }

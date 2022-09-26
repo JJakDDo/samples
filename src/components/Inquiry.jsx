@@ -14,6 +14,7 @@ import InquiryList from "./InquiryList";
 import CreateInquiry from "./CreateInquiry";
 import Modals from "./Modals";
 import { errorHandler } from "../utils/error";
+import { useNavigate } from "react-router-dom";
 
 function Inquiry({ admin }) {
   const [showCreateInquiry, setShowCreateInquiry] = useState(false);
@@ -25,6 +26,7 @@ function Inquiry({ admin }) {
   const [totalInquiries, setTotalInquiries] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     const url = admin
@@ -42,7 +44,12 @@ function Inquiry({ admin }) {
         setAdminLoggedIn(false);
         setJwt("", "");
       } else if (data.data.code === 2) {
-        alert("Not authorized. Please log in again");
+        setLoggedIn(false);
+        setAdminLoggedIn(false);
+        setJwt("", "");
+        alert("Not authorized. Please log in again", () =>
+          navigate(admin ? "/adminInquiry" : "/userInquiry")
+        );
       }
     } catch (error) {
       errorHandler(error);

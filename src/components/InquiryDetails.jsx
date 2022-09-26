@@ -25,6 +25,9 @@ function InquiryDetails({ admin }) {
   const responseRef = useRef(null);
   const index = inquiries.findIndex((inquiry) => inquiry.id === Number(id));
   const navigate = useNavigate();
+  const setJwt = useStore((state) => state.setJwt);
+  const setLoggedIn = useStore((state) => state.setLoggedIn);
+  const setAdminLoggedIn = useStore((state) => state.setAdminLoggedIn);
 
   const getComments = useCallback(async () => {
     try {
@@ -75,8 +78,11 @@ function InquiryDetails({ admin }) {
         responseRef.current.value = "";
         getComments();
       } else if (data.data.code === 2) {
+        setLoggedIn(false);
+        setAdminLoggedIn(false);
+        setJwt("", "");
         alert("Not authorized. Please log in again", () =>
-          navigate(admin ? "/adminInquiry" : "userInquiry")
+          navigate(admin ? "/adminInquiry" : "/userInquiry")
         );
       }
     } catch (error) {

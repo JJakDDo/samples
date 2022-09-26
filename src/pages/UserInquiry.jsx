@@ -4,10 +4,9 @@ import Login from "../components/Login";
 import Inquiry from "../components/Inquiry";
 
 function UserInquiry() {
-  const loggedIn = useStore((state) => state.loggedIn);
   const setLoggedIn = useStore((state) => state.setLoggedIn);
-
-  if (loggedIn) {
+  const jwt = useStore((state) => state.jwt);
+  if (jwt.access_token) {
     return <Inquiry />;
   }
   return <Login setLoggedIn={setLoggedIn} />;

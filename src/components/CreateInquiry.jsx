@@ -3,6 +3,7 @@ import { useStore } from "../store/store";
 import axios from "axios";
 import { EDITOR_JS_TOOLS } from "../constants/tools";
 import { createReactEditorJS } from "react-editor-js";
+import { useNavigate } from "react-router-dom";
 
 import {
   Typography,
@@ -22,6 +23,9 @@ function CreateInquiry({ setShowCreateInquiry }) {
   const titleRef = useRef(null);
   const jwt = useStore((state) => state.jwt);
   const editorCore = useRef(null);
+  const setJwt = useStore((state) => state.setJwt);
+  const setLoggedIn = useStore((state) => state.setLoggedIn);
+  const navigate = useNavigate();
 
   const ReactEditorJS = createReactEditorJS();
 
@@ -66,6 +70,11 @@ function CreateInquiry({ setShowCreateInquiry }) {
       //     },
       //   }
       // );
+      setLoggedIn(false);
+      setJwt("", "");
+      alert("Not authorized. Please log in again", () =>
+        navigate("/userInquiry")
+      );
     }
 
     if (data.data.code === 0) {
